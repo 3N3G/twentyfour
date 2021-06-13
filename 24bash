@@ -30,4 +30,7 @@ def judgePoint24(nums) -> bool:
                             except ZeroDivisionError:
                                 pass
         return False
-judgePoint24([3,3,8,8])
+arr = []
+for i in range(4):
+        arr.append(input("Enter a number: "))
+judgePoint24(arr)
