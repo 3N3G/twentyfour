@@ -1,0 +1,33 @@
+import itertools
+class BreakIt(Exception): pass
+
+def judgePoint24(nums) -> bool:
+
+        operations = {"*", "/", "+", "-"}
+        for operationOne in operations:
+            for operationTwo in operations:
+                for operationThree in operations:
+                    for permnums in list(itertools.permutations(nums)):
+                        for parens in range(7):
+                            try:
+                                if parens == 0:
+                                    expression = str(permnums[0])+operationOne+str(permnums[1])+operationTwo+str(permnums[2])+operationThree+str(permnums[3])
+                                elif parens == 1:
+                                    expression = "(" + str(permnums[0])+operationOne+str(permnums[1]) + ")" +operationTwo+str(permnums[2])+operationThree+str(permnums[3])
+                                elif parens == 2:
+                                    expression = "(" + str(permnums[0])+operationOne+str(permnums[1])+operationTwo+str(permnums[2]) + ")" + operationThree+str(permnums[3])
+                                elif parens == 3:
+                                    expression = "(" + str(permnums[0])+operationOne+str(permnums[1]) + ")" +operationTwo + "(" +str(permnums[2])+operationThree+str(permnums[3]) + ")"
+                                elif parens == 4:
+                                    expression = str(permnums[0])+operationOne + "(" + str(permnums[1])+operationTwo+str(permnums[2]) + ")" + operationThree+str(permnums[3])
+                                elif parens == 5:
+                                    expression = str(permnums[0])+operationOne + "(" + str(permnums[1])+operationTwo+str(permnums[2])+operationThree+str(permnums[3]) + ")"
+                                elif parens == 6:
+                                    expression = str(permnums[0])+operationOne+str(permnums[1])+operationTwo + "(" + str(permnums[2])+operationThree+str(permnums[3]) + ")"
+                                if abs(eval(expression)-24) < 0.01:
+                                        print (expression, "makes 24")
+                                        return True
+                            except ZeroDivisionError:
+                                pass
+        return False
+judgePoint24([3,3,8,8])
