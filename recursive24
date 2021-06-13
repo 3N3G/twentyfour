@@ -1,0 +1,40 @@
+import itertools
+from operator import mul, sub, add
+
+def div(a, b):
+    if b == 0:
+        return 999999.0
+    return a / b
+
+nums = []
+for i in range(4):
+    nums.append(int(input("Input the first number: ")))
+operations = {mul: "*",div: "/",sub: "-",add: "+"}
+
+newnums = nums.copy()
+
+def solveTF(num, sol):
+    if len(num) == 1:
+        if abs(num[0]-24) < 0.1:
+            return sol
+    else:
+        for i, num1 in enumerate(num):
+            for j, num2 in enumerate(num):
+                if i != j:
+                    for op in operations:
+                        new_num = []
+                        for k, n in enumerate(num):
+                            if k != i and k != j:
+                                new_num.append(n)
+                        new_num.append(op(num1,num2))
+                        new_sol = []
+                        for k, h in enumerate(sol):
+                            if k != i and k != j:
+                                new_sol.append(h)
+                        new_sol.append([(sol[i], operations[op], sol[j])])
+                        #print(new_num)
+                        solution = solveTF(new_num, new_sol)
+                        if solution != "No solution":
+                            return solution
+    return "No solution"
+print(solveTF(nums, nums))
