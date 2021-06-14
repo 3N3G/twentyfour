@@ -1,36 +1,52 @@
-import itertools
-class BreakIt(Exception): pass
+def op(a, b, operator):
+    if operator == "*":
+        return a*b
+    elif operator == "/":
+        if b == 0:
+            return "divisionbyzero"
+        else:
+            return a/b
+    elif operator == "-":
+        return a-b
+    elif operator == "+":
+        return a+b
 
-def judgePoint24(nums) -> bool:
+nums = []
+howmanynums = int(input("How many numbers do you want? (Standard is 4) "))
+for i in range(howmanynums):
+    nums.append(int(input("Input a number: ")))
+howManySols = input("Do you want all the solutions? (Y/N) ")
+operators = ["*", "/", "-", "+"]
 
-        operations = {"*", "/", "+", "-"}
-        for operationOne in operations:
-            for operationTwo in operations:
-                for operationThree in operations:
-                    for permnums in list(itertools.permutations(nums)):
-                        for parens in range(7):
-                            try:
-                                if parens == 0:
-                                    expression = str(permnums[0])+operationOne+str(permnums[1])+operationTwo+str(permnums[2])+operationThree+str(permnums[3])
-                                elif parens == 1:
-                                    expression = "(" + str(permnums[0])+operationOne+str(permnums[1]) + ")" +operationTwo+str(permnums[2])+operationThree+str(permnums[3])
-                                elif parens == 2:
-                                    expression = "(" + str(permnums[0])+operationOne+str(permnums[1])+operationTwo+str(permnums[2]) + ")" + operationThree+str(permnums[3])
-                                elif parens == 3:
-                                    expression = "(" + str(permnums[0])+operationOne+str(permnums[1]) + ")" +operationTwo + "(" +str(permnums[2])+operationThree+str(permnums[3]) + ")"
-                                elif parens == 4:
-                                    expression = str(permnums[0])+operationOne + "(" + str(permnums[1])+operationTwo+str(permnums[2]) + ")" + operationThree+str(permnums[3])
-                                elif parens == 5:
-                                    expression = str(permnums[0])+operationOne + "(" + str(permnums[1])+operationTwo+str(permnums[2])+operationThree+str(permnums[3]) + ")"
-                                elif parens == 6:
-                                    expression = str(permnums[0])+operationOne+str(permnums[1])+operationTwo + "(" + str(permnums[2])+operationThree+str(permnums[3]) + ")"
-                                if abs(eval(expression)-24) < 0.01:
-                                        print (expression, "makes 24")
-                                        return True
-                            except ZeroDivisionError:
-                                pass
-        return False
-arr = []
-for i in range(4):
-        arr.append(input("Enter a number: "))
-judgePoint24(arr)
+def solveTF(num, sol):
+    if len(num) == 1:
+        if abs(num[0]-24) < 0.01:
+            return sol
+    else:
+        for i, num1 in enumerate(num):
+            for j, num2 in enumerate(num):
+                if i != j:
+                    for oper in operators:
+                        new_num = []
+                        for k, n in enumerate(num):
+                            if k != i and k != j:
+                                new_num.append(n)
+                        if op(num1, num2, oper) != "divisionbyzero":
+                            new_num.append(op(num1,num2,oper))
+                            new_sol = []
+                            for k, h in enumerate(sol):
+                                if k != i and k != j:
+                                    new_sol.append(h)
+                            new_sol.append((sol[i], oper, sol[j]))
+                            solution = solveTF(new_num, new_sol)
+                            if solution != "No solution":
+                                if howManySols == "Y":
+                                    print(solution)
+                                    pass
+                                else: 
+                                    return solution
+    return "No solution"
+if howManySols == "N":
+    print(solveTF(nums, nums))
+else:
+    solveTF(nums, nums)
